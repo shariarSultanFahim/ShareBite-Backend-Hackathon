@@ -5,7 +5,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { BaseExceptionFilter, ResponseInterceptor } from 'lib';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{cors:true});
 
   // API Prefix
   const globalPrefix = 'api';
@@ -28,8 +28,7 @@ async function bootstrap() {
 
   // Swagger
   const config = new DocumentBuilder()
-    .setTitle('NestJS API Boilerplate')
-    .setDescription('The boilerplate for NestJS projects')
+    .setTitle('ShareBite API Doccumentation')
     .setVersion('1.0')
     .addBearerAuth()
     .addGlobalResponse({
