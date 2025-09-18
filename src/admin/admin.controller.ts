@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -13,7 +14,10 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Paginated } from 'lib';
 import { Skip } from 'lib/decorators/skip.decorator';
 import { Take } from 'lib/decorators/take.decorator';
-
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
