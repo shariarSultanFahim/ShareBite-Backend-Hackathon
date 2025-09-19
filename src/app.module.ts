@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { DonorAuthModule } from './donor-auth/donor-auth.module';
 import { DropModule } from './drop/drop.module';
 import { HubModule } from './hub/hub.module';
+import { NgoModule } from './ngo/ngo.module';
 
 @Module({
-  imports: [PrismaModule, AdminModule, AuthModule, DonorAuthModule, DropModule, HubModule],
+  imports: [PrismaModule, AdminModule, AuthModule, DonorAuthModule, DropModule, HubModule, NgoModule],
   controllers: [AppController],
   providers: [AppService],
 })

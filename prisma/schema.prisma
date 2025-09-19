@@ -116,6 +116,18 @@ model Hub_Inventory {
   hub        Hub @relation(fields: [hub_id], references: [id], onDelete: Cascade)
   is_transferred Boolean @default(false)
 }
+model Ngo {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  address    String
+  phone      String
+  email      String @unique
+  icon       String?
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+}
 
 
 enum AdminRole {
