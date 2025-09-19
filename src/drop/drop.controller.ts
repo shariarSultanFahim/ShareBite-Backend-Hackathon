@@ -6,27 +6,19 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { DropService } from './drop.service';
 import { CreateDropDto } from './dto/create-drop.dto';
 import { UpdateDropDto } from './dto/update-drop.dto';
-import {
-  ApiBearerAuth,
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Paginated } from 'lib';
 import { Skip } from 'lib/decorators/skip.decorator';
 import { Take } from 'lib/decorators/take.decorator';
-import { Auth } from 'src/auth/entities/auth.entity';
-import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Drops')
 @Controller('drop')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard)
 export class DropController {
   constructor(private readonly dropService: DropService) {}
 
@@ -51,6 +43,7 @@ export class DropController {
   }
 
   @Get(':id')
+  // @Public()
   @ApiOperation({ summary: 'Get drop by ID' })
   @ApiResponse({ status: 200, description: 'Drop returned successfully.' })
   @ApiResponse({ status: 404, description: 'Drop not found.' })

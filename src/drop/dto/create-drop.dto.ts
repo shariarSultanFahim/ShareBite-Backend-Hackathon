@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsArray,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -8,20 +7,15 @@ import {
   IsEnum,
 } from 'class-validator';
 
-// Declare DropType enum in the same file
-export enum DropType {
-  FOOD = 'FOOD',
-  MEDICINE = 'MEDICINE',
-  CLOTHING = 'CLOTHING',
-}
+// Declare DropType enum in the same fil
 
 export class CreateDropDto {
-  @ApiProperty({ enum: DropType })
+  @ApiProperty({ enum: ['Food', 'Medicine', 'Cloth'] })
   @IsNotEmpty()
-  @IsEnum(DropType)
-  drop_type: DropType;
+  @IsEnum(['Food', 'Medicine', 'Cloth'])
+  drop_type: 'Food' | 'Medicine' | 'Cloth';
 
-  @ApiProperty({ type: [String], required: false })
+  @ApiProperty({ type: String, required: false })
   @IsOptional()
   @IsString({ each: true })
   images?: string;

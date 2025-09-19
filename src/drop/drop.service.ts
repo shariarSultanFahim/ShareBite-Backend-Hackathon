@@ -8,18 +8,11 @@ import { Prisma } from '@prisma/client';
 export class DropService {
   constructor(private readonly prisma: PrismaService) {}
   async create(createDropDto: CreateDropDto) {
-    console.log('Creating drop with data:', createDropDto);
-
     return await this.prisma.$transaction(async (prisma) => {
       return await prisma.drop.create({
         data: {
-          drop_type: createDropDto.drop_type,
-          images: createDropDto.images,
-          description: createDropDto.description,
-          assumed_person_for: createDropDto.assumed_person_for,
-          donor: {
-            connect: { id: createDropDto.donor_id },
-          },
+          ...createDropDto,
+          drop_type: createDropDto.drop_type as any, // Ensure enum compatibility
         },
       });
     });

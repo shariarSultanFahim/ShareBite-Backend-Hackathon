@@ -74,7 +74,7 @@ model DonorSession {
 
 model Drop {
   id                 Int       @id @default(autoincrement())
-  drop_type          DropType @default(FOOD)
+  drop_type          DropType  @default(Food)
   images             String?
   description        String?
   assumed_person_for Int
@@ -124,9 +124,9 @@ enum AdminRole {
   RIDER
 }
 enum DropType{
-  FOOD
-  MEDICINE
-  CLOTHING
+  Food
+  Medicine
+  Cloth
 }
 enum DropStatus {
   PENDING
