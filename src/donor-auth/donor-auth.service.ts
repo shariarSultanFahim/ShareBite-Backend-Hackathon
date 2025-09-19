@@ -52,6 +52,7 @@ export class DonorAuthService {
 
     return {
       access_token,
+      donor_id: donor.id,
       token_type: 'bearer',
       expires_in: process.env.JWT_EXPIRY || '3d',
     };
