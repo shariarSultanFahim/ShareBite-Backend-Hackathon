@@ -24,6 +24,12 @@ export class DropService {
         where,
         skip,
         take,
+        include: {
+          donor: true,
+          acceptedByAdmin: true,
+          assignedToRider: true,
+          rejectedByAdmin: true,
+        },
       }),
       this.prisma.drop.count({ where }),
     ]);
@@ -38,6 +44,12 @@ export class DropService {
         where,
         skip,
         take,
+        include: {
+          donor: true,
+          acceptedByAdmin: true,
+          assignedToRider: true,
+          rejectedByAdmin: true,
+        },
       }),
       this.prisma.drop.count({ where: { id } }),
     ]);
@@ -54,11 +66,12 @@ export class DropService {
 
       await tx.hub_Inventory.create({
         data: {
-          type: drop.drop_type,
+          type: 'In',
           person_for: drop.assumed_person_for,
           remarks: drop.description,
           reference_id: drop.id,
           hub_id: hubId,
+          is_transferred: false,
         },
       });
 

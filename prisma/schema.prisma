@@ -32,7 +32,16 @@ model Admin {
   rejectedDrops   Drop[] @relation("RejectedByAdmin")
 
   
+ dispatches Dispatch[] @relation("AdminDispatches")
+}
 
+model Dispatch {
+  id             Int       @id @default(autoincrement())
+  person_for     Int
+  remarks        String?
+  dispatched_by  Int
+  dispatchedByAdmin Admin @relation("AdminDispatches", fields: [dispatched_by], references: [id], onDelete: Cascade)
+  created_at     DateTime  @default(now())
 }
 
 model AuthSession {
@@ -108,7 +117,7 @@ model Hub {
 
 model Hub_Inventory {
   id         Int       @id @default(autoincrement())
-  type       String
+  type       Hub_InventoryType@default(In)
   person_for Int
   remarks    String?
   reference_id Int
@@ -147,4 +156,8 @@ enum DropStatus {
  PICKED
  DELIVERED
  CANCELLED
+}
+enum Hub_InventoryType {
+  In
+  Out
 }
