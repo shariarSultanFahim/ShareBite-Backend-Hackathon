@@ -101,6 +101,7 @@ export class DonorAuthService {
     // Return token and donor info
     return {
       access_token,
+      donor_id: donor.id,
       token_type: 'bearer',
       expires_in: process.env.JWT_EXPIRY || '3d',
       donor,
@@ -120,5 +121,12 @@ export class DonorAuthService {
     });
 
     return { message: 'Logged out successfully' };
+  }
+
+  async findOne(id: number) {
+    console.log('Finding donor with ID:', id);
+    return await this.prisma.donor.findUnique({
+      where: { id },
+    });
   }
 }

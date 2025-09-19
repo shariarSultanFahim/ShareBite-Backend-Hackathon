@@ -1,0 +1,81 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
+import { DropService } from './drop.service';
+import { CreateDropDto } from './dto/create-drop.dto';
+import { UpdateDropDto } from './dto/update-drop.dto';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { Paginated } from 'lib';
+import { Skip } from 'lib/decorators/skip.decorator';
+import { Take } from 'lib/decorators/take.decorator';
+import { Auth } from 'src/auth/entities/auth.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+
+@ApiTags('Drops')
+@Controller('drop')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
+export class DropController {
+  constructor(private readonly dropService: DropService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new drop' })
+  @ApiResponse({ status: 201, description: 'Drop successfully created.' })
+  @ApiResponse({ status: 400, description: 'Invalid input.' })
+  create(@Body() createDropDto: CreateDropDto) {
+    console.log('Creating drop with data:', createDropDto);
+    return this.dropService.create(createDropDto);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get all drops' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of drops returned successfully.',
+  })
+  @Paginated()
+  async findAll(@Skip() skip: number, @Take() take: number) {
+    return await this.dropService.findAll(skip, take);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get drop by ID' })
+  @ApiResponse({ status: 200, description: 'Drop returned successfully.' })
+  @ApiResponse({ status: 404, description: 'Drop not found.' })
+  @Paginated()
+  async findOne(
+    @Param('id') id: string,
+    @Skip() skip: number,
+    @Take() take: number,
+  ) {
+    return await this.dropService.findOne(+id, skip, take);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update a drop by ID' })
+  @ApiResponse({ status: 200, description: 'Drop updated successfully.' })
+  @ApiResponse({ status: 404, description: 'Drop not found.' })
+  update(@Param('id') id: string, @Body() updateDropDto: UpdateDropDto) {
+    return this.dropService.update(+id, updateDropDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a drop by ID' })
+  @ApiResponse({ status: 200, description: 'Drop deleted successfully.' })
+  @ApiResponse({ status: 404, description: 'Drop not found.' })
+  remove(@Param('id') id: string) {
+    return this.dropService.remove(+id);
+  }
+}

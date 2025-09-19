@@ -56,6 +56,7 @@ export class AuthService {
     // Return the user
     return {
       access_token,
+      user_id: user.id,
       token_type: 'bearer',
       expires_in: process.env.JWT_EXPIRY || '3d',
     };
@@ -79,5 +80,11 @@ export class AuthService {
     return {
       message: 'Logged out successfully',
     };
+  }
+
+  async findOne(id: number) {
+    return await this.prisma.admin.findUnique({
+      where: { id },
+    });
   }
 }

@@ -27,6 +27,12 @@ model Admin {
   is_active  Boolean   @default(true)
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+  acceptedDrops   Drop[] @relation("AcceptedByAdmin")
+  assignedDrops   Drop[] @relation("AssignedToRider")
+  rejectedDrops   Drop[] @relation("RejectedByAdmin")
+
+  
+
 }
 
 model AuthSession {
@@ -38,6 +44,7 @@ model AuthSession {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 }
+
 model Donor {
   id           Int            @id @default(autoincrement())
   username     String         @unique
@@ -51,7 +58,9 @@ model Donor {
   is_active    Boolean        @default(true)
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
+drops Drop[]
 }
+
 
 model DonorSession {
   id         Int       @id @default(autoincrement())
@@ -63,9 +72,67 @@ model DonorSession {
   updated_at DateTime  @updatedAt
 }
 
+model Drop {
+  id                 Int       @id @default(autoincrement())
+  drop_type          DropType @default(FOOD)
+  images             String?
+  description        String?
+  assumed_person_for Int
+  status             DropStatus @default(PENDING)
+
+  donor_id           Int
+  donor              Donor     @relation(fields: [donor_id], references: [id], onDelete: Cascade)
+
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+
+  // Multiple relations with Admin
+  accepted_by        Int?
+  acceptedByAdmin    Admin? @relation("AcceptedByAdmin", fields: [accepted_by], references: [id], onDelete: Cascade)
+
+  assigned_rider     Int?
+  assignedToRider    Admin? @relation("AssignedToRider", fields: [assigned_rider], references: [id], onDelete: Cascade)
+
+  rejected_by        Int?
+  rejectedByAdmin    Admin? @relation("RejectedByAdmin", fields: [rejected_by], references: [id], onDelete: Cascade)
+}
+model Hub {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  location   String
+  contact    String
+  hub_inventiry Hub_Inventory[]
+
+  created_at DateTime  @default(now())
+}
+
+model Hub_Inventory {
+  id         Int       @id @default(autoincrement())
+  type       String
+  person_for Int
+  remarks    String?
+  reference_id Int
+  hub_id     Int
+  hub        Hub @relation(fields: [hub_id], references: [id], onDelete: Cascade)
+  is_transferred Boolean @default(false)
+}
+
 
 enum AdminRole {
   ADMIN
   HUB_MANAGER
   RIDER
+}
+enum DropType{
+  FOOD
+  MEDICINE
+  CLOTHING
+}
+enum DropStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+ PICKED
+ DELIVERED
+ CANCELLED
 }
