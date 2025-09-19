@@ -17,8 +17,28 @@ export class DropService {
       });
     });
   }
-  async findAll(skip: number, take: number) {
+  async findAllNoFilter(skip: number, take: number) {
     const where: Prisma.DropWhereInput = {};
+    const [results, total] = await this.prisma.$transaction([
+      this.prisma.drop.findMany({
+        where,
+        skip,
+        take,
+        include: {
+          donor: true,
+          acceptedByAdmin: true,
+          assignedToRider: true,
+          rejectedByAdmin: true,
+        },
+      }),
+      this.prisma.drop.count({ where }),
+    ]);
+    return { results, total };
+  }
+  async findAll(id: number | null, skip: number, take: number) {
+    // Build the where filter dynamically
+    const where: Prisma.DropWhereInput = id ? { donor_id: id } : {};
+
     const [results, total] = await this.prisma.$transaction([
       this.prisma.drop.findMany({
         where,

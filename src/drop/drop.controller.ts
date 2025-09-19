@@ -31,7 +31,6 @@ export class DropController {
     console.log('Creating drop with data:', createDropDto);
     return this.dropService.create(createDropDto);
   }
-
   @Get()
   @ApiOperation({ summary: 'Get all drops' })
   @ApiResponse({
@@ -39,8 +38,23 @@ export class DropController {
     description: 'List of drops returned successfully.',
   })
   @Paginated()
-  async findAll(@Skip() skip: number, @Take() take: number) {
-    return await this.dropService.findAll(skip, take);
+  async findAllNoFilter(@Skip() skip: number, @Take() take: number) {
+    return await this.dropService.findAll(null, skip, take);
+  }
+
+  @Get('donor/:id')
+  @ApiOperation({ summary: 'Get all drops' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of drops returned successfully.',
+  })
+  @Paginated()
+  async findAll(
+    @Param('id') id: string,
+    @Skip() skip: number,
+    @Take() take: number,
+  ) {
+    return await this.dropService.findAll(+id, skip, take);
   }
 
   @Get(':id')
