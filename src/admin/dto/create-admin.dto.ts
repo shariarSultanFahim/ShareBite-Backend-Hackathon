@@ -29,6 +29,7 @@ export class CreateAdminDto {
   avatar?: string;
 
   @ApiProperty({ description: 'Hashed password for admin' })
+  @IsOptional()
   @IsString()
   passhash: string;
 
