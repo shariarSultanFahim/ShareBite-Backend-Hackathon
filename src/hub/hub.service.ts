@@ -31,6 +31,7 @@ export class HubService {
       }),
       this.prisma.hub.count({ where }),
     ]);
+    console.log('Hubs fetched:', results);
 
     return { results, total };
   }

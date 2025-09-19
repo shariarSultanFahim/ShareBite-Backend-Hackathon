@@ -13,6 +13,7 @@ import { UpdateHubDto } from './dto/update-hub.dto';
 import { Paginated } from 'lib';
 import { Skip } from 'lib/decorators/skip.decorator';
 import { Take } from 'lib/decorators/take.decorator';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('hub')
 export class HubController {
@@ -24,6 +25,8 @@ export class HubController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all hubs' })
+  @ApiResponse({ status: 200, description: 'Success' })
   @Paginated()
   findAll(@Skip() skip: number, @Take() take: number) {
     return this.hubService.findAll(skip, take);
