@@ -29,6 +29,11 @@ export class HubController {
     return this.hubService.findAll(skip, take);
   }
 
+  @Get('/all')
+  findAllNoFilter(@Skip() skip: number, @Take() take: number) {
+    return this.hubService.findAllNoFilter(skip, take);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.hubService.findOne(+id);

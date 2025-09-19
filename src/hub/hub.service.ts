@@ -34,6 +34,22 @@ export class HubService {
 
     return { results, total };
   }
+  async findAllNoFilter(skip: number, take: number) {
+    const where: Prisma.HubWhereInput = {};
+    const [results, total] = await this.prisma.$transaction([
+      this.prisma.hub.findMany({
+        where,
+        skip,
+        take,
+        include: {
+          hub_inventiry: true, // ✅ include hub_inventiry
+        },
+      }),
+      this.prisma.hub.count({ where }),
+    ]);
+
+    return { results, total };
+  }
 
   async findOne(id: number) {
     const hub = await this.prisma.hub.findUnique({
