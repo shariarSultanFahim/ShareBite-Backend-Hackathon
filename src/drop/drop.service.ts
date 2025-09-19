@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDropDto } from './dto/create-drop.dto';
 import { UpdateDropDto } from './dto/update-drop.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -78,6 +78,7 @@ export class DropService {
   }
 
   async acceptDrop(dropId: number, hubId: number, adminId: number) {
+    console.log('Accepting drop:', { dropId, hubId, adminId });
     return this.prisma.$transaction(async (tx) => {
       const drop = await tx.drop.update({
         where: { id: dropId },
@@ -99,7 +100,42 @@ export class DropService {
     });
   }
 
+  async updateStatus(
+    dropId: number,
+    status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'DELIVERED',
+    adminId: number,
+    hubId?: number,
+  ) {
+    console.log('Updating drop status:', { dropId, status, adminId, hubId });
+    const drop = await this.prisma.drop.findUnique({
+      where: { id: Number(dropId) },
+    });
+    if (!drop) throw new NotFoundException(`Drop with id ${dropId} not found`);
+
+    // Prepare update object
+    const updateData: any = { status };
+
+    if (status === 'ACCEPTED') {
+      updateData.accepted_by = adminId;
+    } else if (status === 'REJECTED') {
+      updateData.rejected_by = adminId;
+    } else if (status === 'DELIVERED') {
+      // updateData.deliverd_by = adminId;
+
+      if (hubId) {
+        await this.acceptDrop(dropId, hubId, adminId);
+      }
+    }
+
+    return await this.prisma.drop.update({
+      where: { id: dropId },
+      data: updateData,
+    });
+  }
+
   update(id: number, updateDropDto: UpdateDropDto) {
+    console.log('UpdateDropDto:', updateDropDto);
+
     return `This action updates a #${id} drop`;
   }
 

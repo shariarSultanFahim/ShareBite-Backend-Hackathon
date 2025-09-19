@@ -104,6 +104,7 @@ model Drop {
 
   rejected_by        Int?
   rejectedByAdmin    Admin? @relation("RejectedByAdmin", fields: [rejected_by], references: [id], onDelete: Cascade)
+  
 }
 model Hub {
   id         Int       @id @default(autoincrement())

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { DropService } from './drop.service';
 import { CreateDropDto } from './dto/create-drop.dto';
@@ -15,6 +16,7 @@ import { Paginated } from 'lib';
 import { Skip } from 'lib/decorators/skip.decorator';
 import { Take } from 'lib/decorators/take.decorator';
 import { AcceptDropDto } from './dto/accept-drop.dto';
+import { UpdateDropStatusDto } from './dto/update-drop-status.dto';
 
 @ApiTags('Drops')
 @Controller('drop')
@@ -97,5 +99,15 @@ export class DropController {
   @ApiResponse({ status: 404, description: 'Drop or Hub not found.' })
   acceptDrop(@Param('id') id: string, @Body() body: AcceptDropDto) {
     return this.dropService.acceptDrop(+id, body.hubId, body.adminId);
+  }
+
+  @Patch(':id/status')
+  async updateStatus(
+    @Param('id', ParseIntPipe) dropId: number,
+
+    @Body() body: UpdateDropStatusDto,
+  ) {
+    const { status, adminId, hubId } = body;
+    return this.dropService.updateStatus(dropId, status, adminId, hubId);
   }
 }
