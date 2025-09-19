@@ -45,6 +45,27 @@ export class DropService {
     return { results, total };
   }
 
+  async acceptDrop(dropId: number, hubId: number, adminId: number) {
+    return this.prisma.$transaction(async (tx) => {
+      const drop = await tx.drop.update({
+        where: { id: dropId },
+        data: { status: 'ACCEPTED', accepted_by: adminId },
+      });
+
+      await tx.hub_Inventory.create({
+        data: {
+          type: drop.drop_type,
+          person_for: drop.assumed_person_for,
+          remarks: drop.description,
+          reference_id: drop.id,
+          hub_id: hubId,
+        },
+      });
+
+      return drop;
+    });
+  }
+
   update(id: number, updateDropDto: UpdateDropDto) {
     return `This action updates a #${id} drop`;
   }

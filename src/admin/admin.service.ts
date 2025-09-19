@@ -8,10 +8,9 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
-
   async create(createAdminDto: CreateAdminDto) {
     return await this.prisma.$transaction(async (prisma) => {
-      // 1. Generate a random passphrase (e.g., 8 characters)
+      // Generate passphrase
       const passphrase = Math.random().toString(36).slice(-8);
 
       // 2. Hash the passphrase with bcrypt
